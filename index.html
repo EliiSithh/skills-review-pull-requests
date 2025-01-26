@@ -1,152 +1,197 @@
-<title>Tic Tac Toe</title>
-<meta charset="UTF-8" />
+<!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="UTF-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+       <!-- Give it a title -->
+       <title>Custom Video Player</title>
 
-<style>
-  body,
-  td,
-  input {
-    font-size: 24px;
-    line-height: 1.5;
-    text-align: center;
-    font-family: system-ui, sans-serif;
+       <!-- Add the Font Awesome Icons -->
+       <link
+         href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+         rel="stylesheet"
+         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+         crossorigin="anonymous"
+       />
+
+       <!-- Include our stylesheets -->
+       <link rel="stylesheet" href="css/progress.css" />
+       <link rel="stylesheet" href="css/style.css" />
+
+       <!-- Include our script -->
+       <script src="script.js" defer></script>
+     </head>
+     <body></body>
+   </html>
+   <body>
+    <h1>Custom Video Player</h1>
+    <video
+      controls
+      src="videos/gone.mp4"
+      id="video"
+      class="screen"
+      poster="img/poster.png"
+    ></video>
+  </body>
+  <div class="controls">
+    <!-- Create a play button with an icon with a class of i.fa.fa-play.fa-2x -->
+    <button class="btn" id="play"><i class="fa fa-play fa-2x"></i></button>
+    <!-- Create a stop button with an icon with a class of i.fa.fa-play.fa-2x -->
+    <button class="btn" id="stop"><i class="fa fa-stop fa-2x"></i></button>
+    <!-- Create an input for the progress bar -->
+    <input
+      type="range"
+      name="progress"
+      id="progress"
+      class="progress"
+      min="0"
+      max="100"
+      step="0.1"
+      value="0"
+    />
+    <!-- Comment out the progress.css to see the default style of the progress bar -->
+    <!-- Create a span for the timestamp -->
+    <span class="timestamp" id="timestamp">00:00</span>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Questrial&display=swap');
+        </style>
+        // <uniquifier>: Use a unique and descriptive class name
+            // <weight>: Use a value from 100 to 900
+            
+            .montserrat-<uniquifier> {
+              font-family: "Montserrat", serif;
+              font-optical-sizing: auto;
+              font-weight: <weight>;
+              font-style: normal;
+            }.questrial-regular {
+                font-family: "Questrial", serif;
+                font-weight: 400;
+                font-style: normal;
+              }
+              h1 {
+                color: #fff;
+              }h1 {
+                color: #fff;
+              }     
+              .screen {
+                cursor: pointer;
+                width: 60%;
+                background-color: #000 !important;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+              }
+              .controls {
+                background: #333;
+                color: #fff;
+                width: 60%;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+              }
+              .controls .btn {
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+              }
+              /* Select the class controls and fa-play */
+   .controls .fa-play {
+     color: #28a745;
+   }
+
+   /* Select the controls and fa-stop */
+   .controls .fa-stop {
+     color: #dc3545;
+   }
+   /* Select the controls and fa-pause (which we will create in JS */
+.controls .fa-pause {
+  color: #fff;
+}
+.controls .timestamp {
+    color: #fff;
+    font-weight: bold;
+    margin-left: 10px;
   }
-  td {
-    height: 3rem;
-    width: 3rem;
-    text-align: center;
-  }
-  table {
-    margin: 5rem auto;
-  }
-  @media (prefers-color-scheme: dark) {
-    body,
-    input {
-      background: #222;
-      color: #ccc;
-    }
-  }
-</style>
+  /* Remove the outline when clicking the button */
+.btn:focus {
+  outline: 0;
+}
+/* Remove the outline when clicking the button */
+.btn:focus {
+  outline: 0;
+}     
+// Selectors
+const video = document.getElementById('video');
+const play = document.getElementById('play');
+const stop = document.getElementById('stop');
+const progress = document.getElementById('progress');
+const timestamp = document.getElementById('timestamp');
+// Event Listeners
+   video.addEventListener('click', toggleVideoStatus);
+   video.addEventListener('pause', updatePlayIcon);
+   video.addEventListener('play', updatePlayIcon);
+   video.addEventListener('timeupdate', updateProgress);
+   play.addEventListener('click', toggleVideoStatus);
+   stop.addEventListener('click', stopVideo);
+   progress.addEventListener('change', setVideoProgress);
+   // Handlers
+   // Play and Pause Video
+   function toggleVideoStatus() {
+     if (video.paused) {
+       video.play();
+     } else {
+       video.pause();
+     }
+   }
+   // Update the Play/Pause Icon
+   function updatePlayIcon() {
+     if (video.paused) {
+       play.innerHTML = '<i class="fa fa-play fa-2x"></i>';
+     } else {
+       play.innerHTML = '<i class="fa fa-pause fa-2x"></i>';
+     }
+   }
+   // Stop the Video
+   function stopVideo() {
+     // Note: There is not a video.stop(), so let's manually code that logic
+     video.currentTime = 0;
+     video.pause();
+   }
+   // Update the Progress and Timestamp
+   function updateProgress() {
+     console.log('time:', video.currentTime);
+     console.log('duration:', video.duration);
+   }
+   const percentage = (video.currentTime / video.duration) * 100;
+   console.log('percentage:', percentage);
+   progress.value = percentage;
+   // Compute the minutes
+   let minutes = Math.floor(video.currentTime / 60);
 
-<h1>Tic Tac Toe</h1>
+   // Prefix with a zero (0) if the minutes are single digit values
+   if (minutes < 10) {
+     minutes = '0' + String(minutes);
+   }
 
-<table>
-  <tr>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-    <td><input type="checkbox" /></td>
-  </tr>
-</table>
+   // Compute the seconds
+   let seconds = Math.floor(video.currentTime % 60);
 
-<h2 hidden>Game over</h2>
+   // Prefix with a zero (0) if the seconds are single digit values
+   if (seconds < 10) {
+     seconds = '0' + String(seconds);
+   }
 
-<script>
-  // Initialization
-  const boxes = Array.from(document.querySelectorAll("td"));
-  const inputs = Array.from(document.querySelectorAll("[type=checkbox]"));
-  const rows = [1, 2, 3].map((n) =>
-    Array.from(document.querySelectorAll(`tr:nth-child(${n}) td`))
-  );
-  const columns = [1, 2, 3].map((n) =>
-    Array.from(document.querySelectorAll(`td:nth-child(${n})`))
-  );
-  const diagonals = [
-    [
-      [1, 1],
-      [2, 2],
-      [3, 3],
-    ],
-    [
-      [3, 1],
-      [2, 2],
-      [1, 3],
-    ],
-  ].map((set) =>
-    set.map(([x, y]) =>
-      document.querySelector(`tr:nth-child(${x}) td:nth-child(${y})`)
-    )
-  );
-  const gameOver = document.querySelector("h2");
-  const HUMAN = "🧑‍💻";
-  const ROBOT = "🤖";
+   timestamp.innerHTML = `${minutes}:${seconds}`;
+   // Set Video Timestamp to Progress
+   function setVideoProgress() {
+     // Compute the location of the video based on the progress value
+     const location = (Number(progress.value) * video.duration) / 100;
 
-  // Decide who goes first
-  if (Math.random() > 0.5) {
-    runRobotTurn();
-  }
+     // Sync the video's current time to the progress bar's value
+     video.currentTime = location;
 
-  // Handle when a user clicks an input
-  for (const input of inputs) {
-    input.addEventListener("click", handleClickInput);
-  }
-
-  // The user chose a box, check for win, robot turn, check for win
-  function handleClickInput(evt) {
-    evt.target.closest("td").innerHTML = HUMAN;
-    if (hasWin()) {
-      return endGame();
-    }
-    runRobotTurn();
-    if (hasWin()) {
-      return endGame();
-    }
-  }
-
-  // Choose a random available box
-  function runRobotTurn() {
-    const robotBoxes = shuffle(boxes);
-    while (robotBoxes.length) {
-      const box = robotBoxes.shift();
-      if (box.querySelector("input")) {
-        box.innerHTML = ROBOT;
-        break;
-      }
-    }
-  }
-
-  // Determine win
-  function hasWin() {
-    return (
-      rows.some(hasAllSame) ||
-      columns.some(hasAllSame) ||
-      diagonals.some(hasAllSame)
-    );
-  }
-
-  // Determine if every cell matches
-  function hasAllSame(arr) {
-    return arr.every(
-      (td) => !td.querySelector("input") && td.innerHTML === arr[0].innerHTML
-    );
-  }
-
-  // Display game over, cancel events
-  function endGame() {
-    gameOver.hidden = false;
-    for (const input of inputs) {
-      input.removeEventListener("click", handleClickInput);
-      input.remove();
-    }
-  }
-
-  // Shuffle a copy of the input array
-  function shuffle(array) {
-    array = array.slice(0);
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * i);
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
-  }
-</script>
+     // The line above triggers a `timeupdate` event which will invoke the `updateProgress` function
+   }
+          
